@@ -1,0 +1,224 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Customers</h4>
+                <h5 class="card-subtitle text-muted">List of Customers</h5>
+                <br>
+                <div class=" col text-right">
+                    <div class="row">
+                        <div class="col text-right">
+                            <button type="button" class="btn btn-primary ml-2  btn-sm" (click)="updateOrSave('')"><i
+                                    class="fa fa-plus pr-2"></i>New Customer</button>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="table-responsive">
+                    <table class="table align-middle text-nowrap">
+                        <thead>
+                            <tr>
+                                <th class="text-dark font-medium fs-4">Id</th>
+                                <th class="text-dark font-medium fs-4">Name</th>
+                                <th class="text-dark font-medium fs-4">Adress</th>
+                                <th class="text-dark font-medium fs-4">Phone</th>
+                                <th class="text-dark font-medium fs-4">Status</th>
+                                <th class="text-dark font-medium fs-4">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody *ngIf="currentPage">
+                            <tr *ngFor="let customer of currentPage?.elements">
+                                <th scope="row">{{customer.customerId}}</th>
+                                <td>{{customer.customerName}}</td>
+                                <td>{{customer.customerAddress}}</td>
+                                <td>{{customer.customerPhone}}</td>
+                                <td>{{customer.customerStatus}}</td>
+                                <td>
+                                    <button class="btn btn-danger btn-sm"
+                                        (click)="findById(customer.customerId)">Invoices</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                    <div class="col text-center">
+                        <button class="btn btn-primary mr-2  btn-sm" role="button" type="button"
+                            [disabled]="currentPage?.previous?.page > currentPage?.current?.page" (click)="prevPage()">
+                            Previous
+                        </button>
+                        <span>{{ currentPage?.current?.page }} of {{ currentPage?.totalPages }}</span>
+                        <button class="btn btn-primary ml-2  btn-sm" role="button" type="button"
+                            [disabled]="currentPage?.next?.page < currentPage?.current?.page" (click)="nextPage()">
+                            Next
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div bsModal #primaryModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true" autocomplete="off" [config]="{ignoreBackdropClick: true, keyboard: false}">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content fondo" appMovable>
+            <div class="modal-header">
+                <h5 class="modal-title letterSize">{{action}}</h5>
+                <button type="button" class="close" (click)="hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="customerItemsForm" autocomplete="off" novalidate>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="name" class="titles"><span class="punto"></span>Name:</label>
+                                <input class="form-control letrasguion" type="text" id="name" name="name"
+                                    [(ngModel)]="customer.customerName" formControlName="customerName">
+
+                                <div
+                                    *ngIf="!customerItemsForm.controls['customerName'].valid && customerItemsForm.controls['customerName'].touched">
+
+                                    <p class="text-danger animated fadeIn"
+                                        *ngIf="customerItemsForm.controls['customerName'].errors?.['required']">¡El name
+                                        es
+                                        requerido!</p>
+                                    <p class="text-danger animated fadeIn"
+                                        *ngIf="customerItemsForm.controls['customerName'].errors?.['minlength']">Debe
+                                        ser de al
+                                        menos
+                                        {{customerItemsForm.controls['customerName'].errors?.['minlength'].requiredLength}}
+                                        caracteres.</p>
+
+                                </div>
+                            </div>
+                        </div>
+                        <br><br><br><br>
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="name" class="titles"><span class="punto"></span>Address:</label>
+                                <input class="form-control letrasguion" type="text" id="name" name="name"
+                                    [(ngModel)]="customer.customerAddress" formControlName="customerAddress">
+
+                                <div
+                                    *ngIf="!customerItemsForm.controls['customerAddress'].valid && customerItemsForm.controls['customerAddress'].touched">
+
+                                    <p class="text-danger animated fadeIn"
+                                        *ngIf="customerItemsForm.controls['customerAddress'].errors?.['required']">¡El
+                                        Address es
+                                        requerido!</p>
+                                    <p class="text-danger animated fadeIn"
+                                        *ngIf="customerItemsForm.controls['customerAddress'].errors?.['minlength']">Debe
+                                        ser de al
+                                        menos
+                                        {{customerItemsForm.controls['customerAddress'].errors?.['minlength'].requiredLength}}
+                                        caracteres.</p>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <br><br><br><br>
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="phone" class="titles"><span class="punto"></span>Phone:</label>
+                                <input class="form-control letrasguion" type="number" id="phone" name="phone"
+                                    [(ngModel)]="customer.customerPhone" formControlName="customerPhone">
+
+                                <div
+                                    *ngIf="!customerItemsForm.controls['customerPhone'].valid && customerItemsForm.controls['customerPhone'].touched">
+
+                                    <p class="text-danger animated fadeIn"
+                                        *ngIf="customerItemsForm.controls['customerPhone'].errors?.['required']">¡El
+                                        Address es
+                                        requerido!</p>
+                                    <p class="text-danger animated fadeIn"
+                                        *ngIf="customerItemsForm.controls['customerPhone'].errors?.['minlength']">Debe
+                                        ser de al
+                                        menos
+                                        {{customerItemsForm.controls['customerPhone'].errors?.['minlength'].requiredLength}}
+                                        caracteres.</p>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <br><br><br><br>
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="status" class="titles"><span class="punto"></span>Status:</label>
+                                <input class="form-control letrasguion" type="number" id="status" name="status"
+                                    [(ngModel)]="customer.customerStatus" formControlName="customerStatus">
+
+                                <div
+                                    *ngIf="!customerItemsForm.controls['customerStatus'].valid && customerItemsForm.controls['customerStatus'].touched">
+
+                                    <p class="text-danger animated fadeIn"
+                                        *ngIf="customerItemsForm.controls['customerStatus'].errors?.['required']">¡El
+                                        Address es
+                                        requerido!</p>
+                                    <p class="text-danger animated fadeIn"
+                                        *ngIf="customerItemsForm.controls['customerStatus'].errors?.['minlength']">Debe
+                                        ser de al
+                                        menos
+                                        {{customerItemsForm.controls['customerStatus'].errors?.['minlength'].requiredLength}}
+                                        caracteres.</p>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <br><br>
+                    <div class="card-body  col text-center">
+                        <button type="submit" class="btn btn-primary btn-sm" (click)="save()">Save</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal Invoices-->
+
+<div bsModal #modalInvoices="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true" autocomplete="off" [config]="{ignoreBackdropClick: true, keyboard: false}"
+    data-target=".bd-example-modal-sm">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" (click)="hideModalInvoice()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table align-middle text-nowrap">
+                        <thead>
+                            <tr>
+                                <th class="text-dark font-medium fs-4">Id</th>
+                                <th class="text-dark font-medium fs-4">Code</th>
+                                <th class="text-dark font-medium fs-4">Status</th>
+                                <th class="text-dark font-medium fs-4">Create At</th>
+                            </tr>
+                        </thead>
+                        <tbody *ngFor="let customer of currentPage?.elements ; let i = index">
+                            <tr *ngFor="let invoices of  customer.invoices ">
+                                <th *ngFor="let item of list.rangos; let j = index" scope="row">{{invoices.invoiceId}}</th>
+                                <td>{{invoices.invoiceCode}}</td>
+                                <td>{{invoices.invoiceStatus}}</td>
+                                <td>{{invoices.createdAt}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br>
+    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
